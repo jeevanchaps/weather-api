@@ -8,16 +8,15 @@ const apiKey = 'e62550fd142b3963bccdabe58d43719d';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index');
+  res.render('index', {weather: null, error: null});
 });
 
-router.post('/',function(req,res,next){
-	let city = req.body.city;
-	let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+router.post('/', function (req, res) {
+  let city = req.body.city;
+  let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
 
-request(url,function(err,response,body){
-	console.log(body);
-	if(err){
+  request(url, function (err, response, body) {
+    if(err){
       res.render('index', {weather: null, error: 'Error, please try again'});
     } else {
       let weather = JSON.parse(body)
@@ -25,11 +24,11 @@ request(url,function(err,response,body){
         res.render('index', {weather: null, error: 'Error, please try again'});
       } else {
         let weatherText = `It's ${weather.main.temp} degrees Celsius in ${weather.name}!`;
+        console.log(weatherText);
         res.render('index', {weather: weatherText, error: null});
       }
-	}
+    }
+  });
 })
-
-});
 
 module.exports = router;
